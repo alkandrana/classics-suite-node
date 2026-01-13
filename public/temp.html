@@ -1,0 +1,69 @@
+<table class="table table-dark table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Header</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for (let item of collection){ %>
+    <tr>
+        <td><%= item.property %></td>
+    </tr>
+    <% } %>
+    </tbody>
+</table>
+<form method="post" action="/sessions/add">
+  <div class="row">
+    <div class="col-2">
+      <label for="scene" class="col-form-label">Scene ID</label>
+    </div>
+    <input type="text" name="sceneId" id="scene" class="col form-control"/>
+    
+  </div>
+  <div class="row">
+    <div class="col-2">
+      <label class="col-form-label" for="date">Start Time</label>
+    </div>
+    <input type="date" name="date" id="date" class="col form-control"/>
+    
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      <label class="col-form-label" for="startTime">Start Time</label>
+    </div>
+    <input type="time" step="1" name="start" id="startTime" class="col form-control"/>
+    
+  </div>
+  <div class="row">
+    <div class="col-2">
+      <label class="col-form-label" for="endTime">Stop Time</label>
+    </div>
+    <input type="time" step="1" name="stop" id="endTime" class="col form-control"/>
+    
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      <label class="col-form-label" for="words">Words Written</label>
+    </div>
+    <input type="number" name="words" id="words" class="col form-control"/>
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      <label class="col-form-label" for="goalId">Goal</label>
+    </div>
+    <select name="goalId" id="goalId" class="col form-control">
+      <option value="">select a goal</option>
+      <% for (let g of goals) {%>
+        <option value="<%= g.id %>"><%= g.title %></option>
+      <% } %>
+    </select>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/goals/" class="btn btn-warning">Cancel</a>
+  </div>
+</form>
+

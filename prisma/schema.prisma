@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Language {
+  LATIN
+  GREEK
+  HEBREW
+}
+
+enum TextNodeType {
+  BOOK
+  SECTION
+  LINE
+}
+
+model Author {
+  authorId  String   @id @db.Citext
+  name      String   @db.VarChar(255)
+
+  praenomen String?  @db.VarChar(255)
+  nomen     String?  @db.VarChar(255)
+  cognomen  String?  @db.VarChar(255)
+
+  opera Opus[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Opus {
+  opusId   String   @db.Citext 
+  title    String   @db.VarChar(255)
+  language Language
+
+  authorId String   @db.Citext
+  author   Author   @relation(fields: [authorId], references: [authorId])
+
+  textNodes TextNode[]
+
+  @@id([authorId, opusId])
+}
+
+model TextNode {
+  id       Int          @id @default(autoincrement())
+  type     TextNodeType
+
+  /// Display label: "I", "Proem", "1", etc.
+  label    String?      @db.VarChar(255)
+
+  /// Ordering among siblings (Book order, Section order, Line number)
+  ordinal  Int
+
+  /// For LINE nodes
+  text     String?      @db.Text
+
+  /// Belongs to an Opus (composite key)
+  authorId String       @db.Citext
+  opusId   String       @db.Citext 
+  opus     Opus         @relation(fields: [authorId, opusId], references: [authorId, opusId])
+
+  /// Tree structure
+  parentId Int?
+  parent   TextNode?    @relation("TextNodeTree", fields: [parentId], references: [id])
+  children TextNode[]   @relation("TextNodeTree")
+
+  /// Line-level relations (you’ll use these only when type == LINE)
+  comments   Comment[]
+  vocabOccurrences VocabOccurrence[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId, opusId, parentId, ordinal])
+  @@unique([authorId, opusId, parentId, ordinal])
+}
+
+model Vocab {
+  id          Int      @id @default(autoincrement())
+
+  lemma       String   @db.VarChar(255)   // your “Entry”
+  translation String   @db.VarChar(255)
+  pos String? @db.VarChar(20)
+
+  language    Language?
+
+  occurrences VocabOccurrence[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([language, lemma])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+
+  phrase    String   @db.VarChar(50)
+  note      String   @db.VarChar(255)
+
+  nodeId    Int
+  node      TextNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([nodeId])
+}
+
+model VocabOccurrence {
+  nodeId  Int
+  node    TextNode @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+
+  vocabId Int
+  vocab   Vocab    @relation(fields: [vocabId], references: [id], onDelete: Cascade)
+
+  // occurrence-specific fields
+  occurrence String? @db.VarChar(50)   // surface form in that line
+  form       String? @db.VarChar(50)   // parsing
+  pos        String? @db.VarChar(20)   // part of speech, if you want it per occurrence
+
+  // optional precision for highlighting in UI
+  startIndex Int?
+  endIndex   Int?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([vocabId, nodeId])  // same vocab once per line (you can change this if needed)
+  @@index([nodeId])
+}
+
