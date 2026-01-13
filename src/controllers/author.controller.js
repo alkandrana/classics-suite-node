@@ -37,3 +37,19 @@ export const createAuthor = async (req, res) => {
   }
   res.redirect("/authors");
 }
+
+export const editAuthor = async (req, res) => {
+  const title = "Edit Author"
+  const authorId = req.body.authorId.trim().toUpperCase();
+  try {
+    const author = await authorClient.findUnique({
+      where: {
+        authorId: authorId,
+      },
+    });
+    console.log(author);
+    res.render("authors/edit", {author: author});
+  } catch (e) {
+    console.log(e);
+  }
+}

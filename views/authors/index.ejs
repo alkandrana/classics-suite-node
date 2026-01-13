@@ -1,25 +1,31 @@
-<% title = 'Authors' %>
-<div class="row">
+<% title='Authors' %>
+  <div class="row">
     <h1 class="col">List of Authors</h1>
     <a href="/authors/add" class="col-2 align-self-start btn btn-success">Add New</a>
-</div>
-<table class="table table-dark table-bordered table-striped">
+  </div>
+  <table class="table table-dark table-bordered table-striped">
     <thead>
-    <tr>
+      <tr>
         <th>Abbreviation</th>
         <th>Name</th>
         <th>Full Name </th>
         <th></th>
-    </tr>
+      </tr>
     </thead>
     <tbody>
-    <% for (let a of authors){ %>
-    <tr>
-        <td><%= a.authorId %></td>
-        <td><%= a.name %></td>
-        <td><%= `${a.praenomen} ${a.nomen} ${a.cognomen}` %></td>
-        <td><a href="/authors/edit" class="btn btn-sm btn-warning">Edit</a> 
-    </tr>
-    <% } %>
+      <% for (let a of authors){ %>
+        <tr>
+          <td>
+            <%= a.authorId %>
+          </td>
+          <td>
+            <%= a.name %>
+          </td>
+          <td>
+            <%= `${a.praenomen} ${a.nomen} ${a.cognomen}` %>
+          </td>
+          <td><a href="/authors/edit/<%= a.authorId %>" class="btn btn-sm btn-warning">Edit</a>
+        </tr>
+        <% } %>
     </tbody>
-</table>
+  </table>

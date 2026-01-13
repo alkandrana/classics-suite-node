@@ -1,0 +1,53 @@
+<% title=locals.title %>
+
+  <form method="post" action="/authors/edit">
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="id" class="col-form-label">Abbreviation</label>
+      </div>
+      <div class="col-4">
+        <input type="text" name="authorId" id="id" value="<%= author.authorId %>" class="form-control" />
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="name" class="col-form-label">Common Name</label>
+      </div>
+      <div class="col-6">
+        <input type="text" name="name" id="name" value="<%= author.name %>" class="form-control">
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="praenomen" class="col-form-label">Praenomen (Latin; optional)</label>
+      </div>
+      <div class="col-4">
+        <input type="text" name="praenomen" id="praenomen" value="<%= author.praenomen %>" class="form-control">
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="nomen" class="col-form-label">Native Name (optional)</label>
+      </div>
+      <div class="col-4">
+        <input type="text" name="nomen" id="nomen" value="<%= author.nomen %>" class="form-control">
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="cognomen" class="col-form-label">Cognomen (Latin; optional)</label>
+      </div>
+      <div class="col-4">
+        <input type="text" name="cognomen" id="cognomen" value="<% author.cognomen %>" class="form-control">
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
+      <a href="/authors/index" class="col-2 btn btn-warning">Cancel</a>
+    </div>
+  </form>
