@@ -39,8 +39,10 @@ export const createAuthor = async (req, res) => {
 }
 
 export const editAuthor = async (req, res) => {
+  console.log ("In Get Author To Edit");
   const title = "Edit Author"
-  const authorId = req.body.authorId.trim().toUpperCase();
+  const authorId = req.params.id; // irrespective of database property name
+  console.log(req.params);
   try {
     const author = await authorClient.findUnique({
       where: {
@@ -53,3 +55,21 @@ export const editAuthor = async (req, res) => {
     console.log(e);
   }
 }
+
+// update author (post)
+export const updateAuthor = async (req, res) => {
+  const authorId = req.params.id.trim().toUpperCase(); 
+  try {
+    const authorData = req.body;
+    const editedAuthor = await authorClient.update({
+      where: {
+        authorId: authorId,
+      },
+      data: authorData,
+    });
+    console.log(`${editedAuthor.authorId} successfully updated.`)
+  } catch (e) {
+    console.log(e);
+  }
+  res.redirect("/authors/");
+} 
