@@ -1,0 +1,17 @@
+<% title=locals.title %>
+  <h1>Confirm Delete Author</h1>
+  <h2>Are you sure you want to delete <%= author.name %>?</h2>
+  <ul>
+    <li>Name: <%= author.name %>
+    </li>
+    <li>Praenomen: <%= author.praenomen %>
+    </li>
+    <li>Native Name: <%= author.nomen %>
+    </li>
+    <li>Cognomen: <%= author.cognomen %>
+    </li>
+  </ul>
+  <form method="post" action="/authors/delete/<%= author.authorId %>">
+    <button type="submit">Delete</button>
+  </form>
+  <a href="/authors/">Cancel</a>

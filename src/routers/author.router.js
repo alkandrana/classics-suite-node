@@ -5,7 +5,9 @@ import {
   addAuthor,
   createAuthor,
   editAuthor,
-  updateAuthor
+  updateAuthor,
+  confirmDelete,
+  deleteAuthor
 } from "../controllers/author.controller.js";
 
 const authorRouter = Router();
@@ -13,7 +15,9 @@ const authorRouter = Router();
 authorRouter.get("/", getAllAuthors);
 authorRouter.get("/add", addAuthor);
 authorRouter.get("/edit/:id", editAuthor);
+authorRouter.get("/delete/:id", confirmDelete);
 authorRouter.post("/add", createAuthor);
 authorRouter.post("/edit/:id", updateAuthor);
+authorRouter.post("/delete/:id", deleteAuthor);
 
 export default authorRouter;

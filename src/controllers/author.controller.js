@@ -73,3 +73,35 @@ export const updateAuthor = async (req, res) => {
   }
   res.redirect("/authors/");
 } 
+
+// get "Confirm Delete" page
+export const confirmDelete = async (req, res) => {
+  const authorId = req.params.id.trim().toUpperCase();
+  try {
+    const record = await authorClient.findUnique({
+      where: {
+        authorId: authorId,
+      },
+    });
+    console.log(record);
+    res.render("authors/delete", { author: record })
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const deleteAuthor = async (req, res) => {
+  const authorId = req.params.id.trim().toUpperCase();
+  try {
+    const object = await authorClient.delete({
+      where: {
+        authorId: authorId,
+      },
+    });
+    console.log(`${object.name} successfully deleted.`)
+    console.log(object);
+    res.redirect("/authors/");
+  } catch (e) {
+    console.log(e);
+  }
+}

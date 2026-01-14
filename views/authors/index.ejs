@@ -24,7 +24,10 @@
           <td>
             <%= `${a.praenomen} ${a.nomen} ${a.cognomen}` %>
           </td>
-          <td><a href="/authors/edit/<%= a.authorId %>" class="btn btn-sm btn-warning">Edit</a>
+          <td>
+            <a href="/authors/edit/<%= a.authorId %>" class="btn btn-sm btn-warning">Edit</a>
+            <a href="/authors/delete/<%= a.authorId %>" class="btn btn-sm btn-danger">Delete</a>
+          </td>
         </tr>
         <% } %>
     </tbody>
