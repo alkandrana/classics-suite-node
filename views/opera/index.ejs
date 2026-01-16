@@ -1,21 +1,28 @@
-<% title = 'Works' %>
+<% title='Works' %>
 
-<h1>List of Works</h1>
-<table class="table table-dark table-bordered table-striped">
+  <h1>List of Works</h1>
+  <a href="/opera/add" class="btn btn-success">Add New Work</a>
+  <table class="table table-dark table-bordered table-striped">
     <thead>
-    <tr>
+      <tr>
         <th>Abbreviation</th>
         <th>Title</th>
         <th>Author </th>
-    </tr>
+      </tr>
     </thead>
     <tbody>
-    <% for (let o of opera){ %>
-    <tr>
-        <td><%= o.opusId %></td>
-        <td><%= o.title %></td>
-        <td><%= o.author.name %></td>
-    </tr>
-    <% } %>
+      <% for (let o of opera){ %>
+        <tr>
+          <td>
+            <%= o.opusId %>
+          </td>
+          <td>
+            <%= o.title %>
+          </td>
+          <td>
+            <%= o.author.name %>
+          </td>
+        </tr>
+        <% } %>
     </tbody>
-</table>
+  </table>
