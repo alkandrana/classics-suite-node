@@ -1,7 +1,8 @@
 import { Router } from "express";
 
 import { 
-	getAllAuthors, 
+  getAllAuthors,
+  getAuthor,
   addAuthor,
   createAuthor,
   editAuthor,
@@ -13,6 +14,7 @@ import {
 const authorRouter = Router();
 
 authorRouter.get("/", getAllAuthors);
+authorRouter.get("/:id", getAuthor);
 authorRouter.get("/add", addAuthor);
 authorRouter.get("/edit/:id", editAuthor);
 authorRouter.get("/delete/:id", confirmDelete);

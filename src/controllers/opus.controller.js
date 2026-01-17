@@ -2,7 +2,10 @@ import { prisma } from '../../lib/prisma.js';
 import { Language } from '../../generated/prisma/enums.ts';
 
 const opusClient = prisma.opus;
-// get all authors
+
+// ---- READ ----
+
+// get all works
 export const getAllOpera = async (req, res) => {
   try {
     const allOpera = await opusClient.findMany({
@@ -16,13 +19,23 @@ export const getAllOpera = async (req, res) => {
   }
 };
 
+// get one work
+
+
 // --- CREATE ---
+
+// get add form
 export const addOpus = async (req, res) => {
   const title = "Add a New Work";
   const languages = Object.values(Language);
-  res.render("opera/add", {title: title, lang: languages} );
+  let authorId = "";
+  if (req.params.authorId){
+    authorId = req.params.authorId.trim().toUpperCase();
+  }
+  res.render("opera/add", {title: title, lang: languages, author: authorId } );
 }
 
+// post new work
 export const createOpus = async (req, res) => {
   req.body.opusId = req.body.opusId.trim().toUpperCase();
   req.body.authorId = req.body.authorId.trim().toUpperCase();
@@ -39,6 +52,8 @@ export const createOpus = async (req, res) => {
 }
 
 // --- UPDATE ---
+
+// get edit form
 export const editOpus = async (req, res) => {
   const title = "Edit Work";
   console.log(req.params);
@@ -62,7 +77,7 @@ export const editOpus = async (req, res) => {
   }
 }
 
-// post
+// post edited work
 export const updateOpus = async (req, res) => {
   const authorId = req.params.authorId.trim().toUpperCase();
   const opusId = req.params.opusId.trim().toUpperCase();
@@ -87,7 +102,7 @@ export const updateOpus = async (req, res) => {
 
 // --- DELETE ---
 
-// get
+// get "confirm delete" page
 export const confirmDelete = async (req, res) => {
   const authId = req.params.authorId.trim().toUpperCase();
   const opusId = req.params.opusId.trim().toUpperCase();
@@ -106,7 +121,7 @@ export const confirmDelete = async (req, res) => {
   res.render("opera/delete", { title: title, opus: opus });
 }
 
-// post
+// post delete request
 export const deleteOpus = async (req, res) => {
   console.log("Deleting...");
   const authId = req.params.authorId.trim().toUpperCase();

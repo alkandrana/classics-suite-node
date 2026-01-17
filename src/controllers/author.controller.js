@@ -2,6 +2,8 @@ import { prisma } from '../../lib/prisma.js';
 
 const authorClient = prisma.author;
 
+// ---- READ ----
+
 // get all authors
 export const getAllAuthors = async (req, res) => {
   try {
@@ -13,6 +15,24 @@ export const getAllAuthors = async (req, res) => {
     console.log(e);
   }
 };
+
+export const getAuthor = async (req, res) => {
+  const authorId = req.params.id.trim().toUpperCase();
+  try {
+    const author = await authorClient.findUnique({
+      where: {
+        authorId: authorId,
+      },
+      include: {
+        opera: true,
+      },
+    });
+    res.render("authors/details", { author: author });
+  } catch (e){
+    console.log(e);
+  }
+}
+// ---- CREATE ----
 
 // get add form
 export const addAuthor = async (req, res) => {
@@ -35,7 +55,9 @@ export const createAuthor = async (req, res) => {
   res.redirect("/authors");
 }
 
-// get edit-author page
+// ---- UPDATE ----
+
+// get edit-author form
 export const editAuthor = async (req, res) => {
   const title = "Edit Author"
   const authorId = req.params.id; // irrespective of database property name
@@ -69,6 +91,8 @@ export const updateAuthor = async (req, res) => {
   res.redirect("/authors/");
 } 
 
+// ---- DELETE ----
+
 // get "Confirm Delete" page
 export const confirmDelete = async (req, res) => {
   const authorId = req.params.id.trim().toUpperCase();
@@ -84,6 +108,7 @@ export const confirmDelete = async (req, res) => {
   }
 }
 
+// post delete request
 export const deleteAuthor = async (req, res) => {
   const authorId = req.params.id.trim().toUpperCase();
   try {

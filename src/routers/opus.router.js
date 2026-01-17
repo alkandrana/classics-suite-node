@@ -7,13 +7,13 @@ import {
   editOpus,
   confirmDelete,
   deleteOpus,
-    updateOpus,
+  updateOpus,
 } from "../controllers/opus.controller.js";
 
 const opusRouter = Router();
 
 opusRouter.get("/", getAllOpera);
-opusRouter.get("/add/", addOpus);
+opusRouter.get("/add/{:authorId}", addOpus);
 opusRouter.get("/:authorId/:opusId/edit/", editOpus);
 opusRouter.post("/add/", createOpus);
 opusRouter.post("/:authorId/:opusId/delete/", deleteOpus);

@@ -1,0 +1,45 @@
+<%= title = locals.title %>
+<h1>Details</h1>
+
+<div>
+    <h4>Author: <%= author.name %></h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Praeomen:
+        </dt>
+        <dd class = "col-sm-10">
+            <%= author.praenomen %>
+        </dd>
+        <dt class = "col-sm-2">
+            Nomen:
+        </dt>
+        <dd class = "col-sm-10">
+            <%= author.nomen %>
+        </dd>
+        <dt class = "col-sm-2">
+            Cognomen
+        </dt>
+        <dd class = "col-sm-10">
+            <%= author.cognomen %>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/authors/edit/<%= author.authorId %>">Edit</a> |
+    <a href="/authors/">Back to List</a> |
+    <a href="/opera/add/<%= author.authorId %>">New Opus</a>
+</div>
+
+<div class="row pt-5">
+    <% for(let o of author.opera)
+    { %>
+    <div class="card col-2 bg-dark text-light m-1 mx-auto" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><%= o.title %></h5>
+            <!--<p class="card-text">Books: o.Books.Count</p>
+            <a asp-action="Details" asp-controller="Opus" asp-route-id="@o.ID" class="card-link">View Opus</a>-->
+        </div>
+    </div>
+   <% } %>
+</div>
