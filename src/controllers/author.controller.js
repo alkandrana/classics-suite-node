@@ -25,31 +25,26 @@ export const createAuthor = async (req, res) => {
   req.body.authorId = req.body.authorId.trim().toUpperCase(); 
   try {
     const authorData = req.body;
-    console.log("Author to save:");
-    console.log(authorData);
     const newAuthor = await authorClient.create({
       data: authorData,
     });
     console.log("Session saved successfully.");
-    console.log(newAuthor);
   } catch (e) {
     console.log(e);
   }
   res.redirect("/authors");
 }
 
+// get edit-author page
 export const editAuthor = async (req, res) => {
-  console.log ("In Get Author To Edit");
   const title = "Edit Author"
   const authorId = req.params.id; // irrespective of database property name
-  console.log(req.params);
   try {
     const author = await authorClient.findUnique({
       where: {
         authorId: authorId,
       },
     });
-    console.log(author);
     res.render("authors/edit", {author: author});
   } catch (e) {
     console.log(e);
@@ -83,7 +78,6 @@ export const confirmDelete = async (req, res) => {
         authorId: authorId,
       },
     });
-    console.log(record);
     res.render("authors/delete", { author: record })
   } catch (e) {
     console.log(e);
@@ -99,7 +93,6 @@ export const deleteAuthor = async (req, res) => {
       },
     });
     console.log(`${object.name} successfully deleted.`)
-    console.log(object);
     res.redirect("/authors/");
   } catch (e) {
     console.log(e);
