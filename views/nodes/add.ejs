@@ -1,0 +1,78 @@
+<% title=locals.title %>
+
+  <form method="post" action="/nodes/add">
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="ordinal" class="col-form-label">Number</label>
+      </div>
+      <div class="col-4">
+        <input type="number" name="ordinal" id="ordinal" class="form-control" />
+      </div>
+    </div>
+
+    <div class="row p-5">
+      <div class="col-2">
+        <label for="label" class="col-form-label">Name</label>
+      </div>
+      <div class="col-6">
+        <input type="text" name="label" id="label" class="form-control">
+      </div>
+    </div>
+    <div class="row p-5">
+      <div class="col-2">
+        <label class="col-form-label" for="type">Type</label>
+      </div>
+      <div class="col-6">
+        <select name="type" id="type" class="form-select">
+          <option value="">select a type</option>
+          <% for (let t of types) {%>
+            <option value="<%= t %>">
+              <%= t %>
+            </option>
+            <% } %>
+        </select>
+      </div>
+    </div>
+    <div class="row p-5">
+      <div class="col-2">
+        <label class="col-form-label" for="authorId">Author</label>
+      </div>
+      <div class="col-6">
+        <select name="authorId" id="authorId" class="form-select">
+          <option value="">select an author</option>
+          <% for (let a of locals.authors) {
+                if (a.authorId === locals.work.authorId){%>
+                  <option value="<%= a.authorId %>" selected><%= a.name %></option>
+                <% } else { %>
+                  <option value="<%= a.authorId %>"><%= a.name %></option>
+                <% } %>
+          <% } %>
+        </select>
+      </div>
+    </div>
+    <div class="row p-5">
+      <div class="col-2">
+        <label class="col-form-label" for="opusId">Work</label>
+      </div>
+      <div class="col-6">
+        <select name="opusId" id="opusId" class="form-select">
+          <option value="">select a work</option>
+          <% for (let o of locals.opera) {
+              if (o.opusId === locals.work.opusId) {%>
+                <option value="<%= o.opusId %>" selected><%= o.title %></option>
+              <% } else { %>
+                <option value="<%= o.opusId %>"><%= o.title %></option>
+              <% } %>
+          <% } %>
+        </select>
+      </div>
+    </div>
+    <div class="row p-5">
+      <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
+      <a href="/opera/" class="col-2 btn btn-warning">Cancel</a>
+    </div>
+  </form>
+
+<script>
+
+</script>

@@ -36,6 +36,8 @@ export const getOpus = async (req, res) => {
         author: true,
       },
     });
+    // FOR TESTING ONLY
+    console.log(opus);
     res.render("opera/details", { opus: opus });
   } catch (e) {
     console.log(e);

@@ -25,9 +25,9 @@
     <a href="/authors/<%= opus.authorId %>/<%= opus.opusId %>/delete" class="link-danger">Delete</a> |
 </div>
 
-<a href="/textNodes/<%= opus.authorId %>/<%= opus.opusId %>/add" class="btn btn-success offset-10">Add New Section</a>
+<a href="/nodes/<%= opus.authorId %>/<%= opus.opusId %>/add" class="btn btn-success offset-10">Add New Section</a>
 <div class="row">
-    <% for (let s in opus.textNodes)
+    <% for (let s of opus.textNodes)
     { %>
     <div class="card col-2 bg-dark text-light m-1 mx-auto" style="width: 18rem;">
         <div class="card-body">
@@ -37,7 +37,7 @@
             <h6 class="card-subtitle mb-2 text-muted">@b.Sections.First().Lines.First().Text</h6>
             }
             <p class="card-text">Lines: @b.Sections.Sum(s => s.Lines.Count)</p>%>
-            <a href="/textNodes/details/<%= s.id %>" class="card-link">View <%= s.type %></a>
+            <a href="/nodes/<%= s.id %>" class="card-link">View <%= s.type %></a>
         </div>
     </div>
     <% } %>

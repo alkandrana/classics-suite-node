@@ -2,6 +2,7 @@ import express from 'express';
 import authorRouter from "./routers/author.router.js";
 import opusRouter from "./routers/opus.router.js";
 import expressEjsLayouts from "express-ejs-layouts";
+import nodeRouter from "./routers/node.router.js";
 
 const app = express();
 const port = 3000;
@@ -18,6 +19,7 @@ app.set('layout', 'layouts/main');
 // set endpoints for dynamic pages
 app.use("/authors", authorRouter);
 app.use("/opera", opusRouter);
+app.use("/nodes", nodeRouter);
 
 app.get("/", (req, res) => {
   res.render("index");
