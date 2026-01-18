@@ -20,7 +20,27 @@ export const getAllOpera = async (req, res) => {
 };
 
 // get one work
-
+export const getOpus = async (req, res) => {
+  const authorId = req.params.authorId.trim().toUpperCase();
+  const opusId = req.params.opusId.trim().toUpperCase();
+  try {
+    const opus = await opusClient.findUnique({
+      where: {
+        authorId_opusId: {
+          authorId: authorId,
+          opusId: opusId,
+        },
+      },
+      include: {
+        textNodes: true,
+        author: true,
+      },
+    });
+    res.render("opera/details", { opus: opus });
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 // --- CREATE ---
 

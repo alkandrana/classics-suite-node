@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   getAllOpera,
+  getOpus,
   addOpus,
   createOpus,
   editOpus,
@@ -13,6 +14,7 @@ import {
 const opusRouter = Router();
 
 opusRouter.get("/", getAllOpera);
+opusRouter.get("/:authorId/:opusId/", getOpus);
 opusRouter.get("/add/{:authorId}", addOpus);
 opusRouter.get("/:authorId/:opusId/edit/", editOpus);
 opusRouter.post("/add/", createOpus);

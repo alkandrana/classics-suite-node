@@ -24,9 +24,14 @@ export const getAuthor = async (req, res) => {
         authorId: authorId,
       },
       include: {
-        opera: true,
+        opera: {
+          include: {
+            textNodes: true,
+          },
+        },
       },
     });
+    console.log(author);
     res.render("authors/details", { author: author });
   } catch (e){
     console.log(e);
@@ -101,7 +106,15 @@ export const confirmDelete = async (req, res) => {
       where: {
         authorId: authorId,
       },
+      include: {
+        _count: {
+          select: {
+            opera: true,
+          },
+        },
+      },
     });
+    console.log(record);
     res.render("authors/delete", { author: record })
   } catch (e) {
     console.log(e);

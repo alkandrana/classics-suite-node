@@ -1,0 +1,44 @@
+<%= title = locals.title %>
+<h1>Details</h1>
+<div>
+    <h4><%= opus.title %></h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Title
+        </dt>
+        <dd class = "col-sm-10">
+            <%=opus.title%>
+        </dd>
+        <dt class = "col-sm-2">
+            Author
+        </dt>
+        <dd class = "col-sm-10">
+            <%=opus.author.name%>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/opera/">Back to List</a> |
+    <a href="/opera/add/<%= opus.authorId %>" class="link-success">Add Work</a> |
+    <a href="/opera/<%= opus.authorId %>/<%= opus.opusId %>/edit" class="link-warning">Edit</a> |
+    <a href="/authors/<%= opus.authorId %>/<%= opus.opusId %>/delete" class="link-danger">Delete</a> |
+</div>
+
+<a href="/textNodes/<%= opus.authorId %>/<%= opus.opusId %>/add" class="btn btn-success offset-10">Add New Section</a>
+<div class="row">
+    <% for (let s in opus.textNodes)
+    { %>
+    <div class="card col-2 bg-dark text-light m-1 mx-auto" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><%= opus.title + " " + s.label %></h5>
+            <%# if(s.Sections.Sum(s => s.Lines.Count) > 0)
+            {
+            <h6 class="card-subtitle mb-2 text-muted">@b.Sections.First().Lines.First().Text</h6>
+            }
+            <p class="card-text">Lines: @b.Sections.Sum(s => s.Lines.Count)</p>%>
+            <a href="/textNodes/details/<%= s.id %>" class="card-link">View <%= s.type %></a>
+        </div>
+    </div>
+    <% } %>
+</div>

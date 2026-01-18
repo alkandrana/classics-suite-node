@@ -26,9 +26,10 @@
     </dl>
 </div>
 <div>
-    <a href="/authors/edit/<%= author.authorId %>">Edit</a> |
     <a href="/authors/">Back to List</a> |
-    <a href="/opera/add/<%= author.authorId %>">New Opus</a>
+    <a href="/opera/add/<%= author.authorId %>" class="link-success">Add Work</a> |
+    <a href="/authors/edit/<%= author.authorId %>" class="link-warning">Edit</a> |
+    <a href="/authors/delete/<%= author.authorId %>" class="link-danger">Delete</a> |
 </div>
 
 <div class="row pt-5">
@@ -37,8 +38,8 @@
     <div class="card col-2 bg-dark text-light m-1 mx-auto" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title"><%= o.title %></h5>
-            <!--<p class="card-text">Books: o.Books.Count</p>
-            <a asp-action="Details" asp-controller="Opus" asp-route-id="@o.ID" class="card-link">View Opus</a>-->
+            <p class="card-text">Sections: <%= o.textNodes.length %></p>
+            <a href="/opera/<%= o.authorId %>/<%= o.opusId %>" class="card-link">View Opus</a>
         </div>
     </div>
    <% } %>
