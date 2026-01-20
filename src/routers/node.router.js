@@ -9,7 +9,7 @@ import {
 const nodeRouter = Router();
 
 nodeRouter.get("/:id", getNode);
-nodeRouter.get("/{:authorId}/{:opusId}/{:nodeId}/add", addNode);
+nodeRouter.get("/add/:authorId/:opusId{/:nodeId}", addNode);
 nodeRouter.post("/add", createNode);
 
 export default nodeRouter;

@@ -32,12 +32,18 @@ export const getOpus = async (req, res) => {
         },
       },
       include: {
-        textNodes: true,
+        textNodes: {
+          include: {
+            children: true,
+          },
+        },
         author: true,
       },
     });
     // FOR TESTING ONLY
     console.log(opus);
+    console.log("Children:")
+    console.log(opus.textNodes[1].children);
     res.render("opera/details", { opus: opus });
   } catch (e) {
     console.log(e);

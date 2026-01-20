@@ -2,10 +2,10 @@
 <h1><%= `${section.opus.author.name} ${section.opus.title} ${section.type} ${section.label}`%></h1>
 
 <% if (section.children.length === 0) {%>
-    <a href="/nodes/<%= section.id %>/add" class="btn btn-lg btn-primary offset-5">Add New Section/Line</a>
+    <a href="/nodes/add/<%= section.opus.authorId %>/<%= section.opus.opusId %>/<%= section.id %>" class="btn btn-lg btn-primary offset-5">Add New Section/Line</a>
 <% } else { %>
     <% if (section.children[0].type === "LINE") { %>
-        <a href="/nodes/<%= section.id %>" class="link-success">Add Line</a> |
+        <a href="/nodes/<%= section.opus.authorId %>/<%= section.opus.opusId %>/<%= section.id %>" class="link-success">Add Line</a> |
         <table class="table table-dark table-bordered table-striped">
             <thead>
             <tr>

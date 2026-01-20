@@ -35,14 +35,20 @@ export const getNode = async (req, res) => {
 
 // get add form
 export const addNode = async (req, res) => {
+    console.log("Getting add form...")
     const currentWork = {
         authorId: req.params.authorId.trim().toUpperCase(),
         opusId: req.params.opusId.trim().toUpperCase()
     };
+    if (req.params.nodeId){
+        currentWork.nodeId = req.params.nodeId;
+    }
     const types = Object.values(TextNodeType);
     try{
         const authors = await prisma.author.findMany({});
         const opera = await prisma.opus.findMany({});
+        console.log(authors);
+        console.log(opera);
         res.render("nodes/add", {
             work: currentWork,
             types: types,
@@ -59,11 +65,27 @@ export const createNode = async (req, res) => {
     console.log("Creating...");
     console.log(req.body);
     const ordinal = parseInt(req.body.ordinal);
+    const text = req.body.text;
+    if (req.body.type === "LINE" && !text) {
+        return res.status(400).send("Line requires text field.");
+    }
     const authorId = req.body.authorId.trim().toUpperCase();
     const opusId = req.body.opusId.trim().toUpperCase();
-    const label = req.body.label.trim();
+    let label;
+    if(!req.body.label) {
+        label = req.body.ordinal.toString();
+    } else {
+        label = req.body.label.trim();
+    }
     if (isNaN(ordinal)) {
         return res.status(400).send("Number must be a valid integer.");
+    }
+    let parentId;
+    if (req.body.parentId){
+        parentId = parseInt(req.body.parentId);
+        if (!parentId){
+            return res.status(400).send("Parent ID must be a valid integer.");
+        }
     }
 
     try {
@@ -71,8 +93,12 @@ export const createNode = async (req, res) => {
             ordinal: ordinal,
             label: label,
             type: req.body.type,
+            text: text,
             authorId: authorId,
             opusId: opusId
+        }
+        if (parentId){
+            nodeData.parentId = parentId;
         }
         const newNode = await nodeClient.create({
             data: nodeData,

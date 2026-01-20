@@ -33,6 +33,14 @@
         </select>
       </div>
     </div>
+    <div class="row p-5 hidden" id="text-row">
+      <div class="col-2">
+        <label class="col-form-label" for="text">Text</label>
+      </div>
+      <div class="col-6">
+        <input type="text" name="text" id="text" class="form-control">
+      </div>
+    </div>
     <div class="row p-5">
       <div class="col-2">
         <label class="col-form-label" for="authorId">Author</label>
@@ -67,6 +75,9 @@
         </select>
       </div>
     </div>
+    <% if(work.nodeId) { %>
+      <input type="hidden" name="parentId" value="<%= work.nodeId %>">
+    <% } %>
     <div class="row p-5">
       <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
       <a href="/opera/" class="col-2 btn btn-warning">Cancel</a>
@@ -74,5 +85,19 @@
   </form>
 
 <script>
+  const textEl = document.getElementById('text-row');
+  const selectTypeEl = document.getElementById('type');
 
+  function toggleTextInput() {
+    if (selectTypeEl.value === 'LINE'){
+      textEl.classList.remove('hidden');
+    } else {
+      textEl.classList.add('hidden');
+      textEl.value = '';
+    }
+  }
+
+  toggleTextInput();
+
+  selectTypeEl.addEventListener('change', toggleTextInput);
 </script>
