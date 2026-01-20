@@ -14,15 +14,15 @@ datasource db {
 }
 
 enum Language {
-  LATIN
-  GREEK
-  HEBREW
+  Latin
+  Greek
+  Hebrew
 }
 
 enum TextNodeType {
-  BOOK
-  SECTION
-  LINE
+  Book
+  Section
+  Line
 }
 
 model Author {
@@ -32,7 +32,7 @@ model Author {
   praenomen String? @db.VarChar(255)
   nomen     String? @db.VarChar(255)
   cognomen  String? @db.VarChar(255)
-
+  language  Language
   opera Opus[]
 
   createdAt DateTime @default(now())
@@ -42,7 +42,7 @@ model Author {
 model Opus {
   opusId   String   @db.Citext
   title    String   @db.VarChar(255)
-  language Language
+  dialect Language
 
   authorId String @db.Citext
   author   Author @relation(fields: [authorId], references: [authorId])

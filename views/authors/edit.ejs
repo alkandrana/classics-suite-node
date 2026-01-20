@@ -42,10 +42,26 @@
         <label for="cognomen" class="col-form-label">Cognomen (Latin; optional)</label>
       </div>
       <div class="col-4">
-        <input type="text" name="cognomen" id="cognomen" value="<% author.cognomen %>" class="form-control">
+        <input type="text" name="cognomen" id="cognomen" value="<%= author.cognomen %>" class="form-control">
       </div>
     </div>
-
+      <div class="row p-5">
+          <div class="col-2">
+              <label class="col-form-label" for="lang">Language</label>
+          </div>
+          <div class="col-6">
+              <select name="language" id="lang" class="form-select">
+                  <option value="">select a language</option>
+                  <% for (let l of languages) { %>
+                      <% if (l === author.language) { %>
+                          <option value="<%= l %>" selected><%= l %></option>
+                      <% } else { %>
+                          <option value="<%= l %>"><%= l %></option>
+                      <% } %>
+                  <% } %>
+              </select>
+          </div>
+      </div>
     <div class="row p-5">
       <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
       <a href="/authors/<%= author.authorId %>" class="col-2 btn btn-warning">Cancel</a>

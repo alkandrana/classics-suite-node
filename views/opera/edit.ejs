@@ -23,10 +23,10 @@
         <label class="col-form-label" for="lang">Language</label>
       </div>
       <div class="col-6">
-        <select name="language" id="lang" class="form-select">
+        <select name="dialect" id="lang" class="form-select">
           <option value="">select a language</option>
           <% for (let l of langs) {
-            if (l == opus.language) {%>
+            if (l === opus.dialect) {%>
               <option value="<%= l %>" selected>
                 <%= l %>
               </option>

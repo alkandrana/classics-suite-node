@@ -36,12 +36,16 @@ export const getNode = async (req, res) => {
 // get add form
 export const addNode = async (req, res) => {
     console.log("Getting add form...")
-    const currentWork = {
+    console.log(req.params);
+    let current = {
         authorId: req.params.authorId.trim().toUpperCase(),
         opusId: req.params.opusId.trim().toUpperCase()
     };
-    if (req.params.nodeId){
-        currentWork.nodeId = req.params.nodeId;
+    if (req.params.nodeId) {
+        current.nodeId = parseInt(req.params.nodeId);
+        if (!current.nodeId) {
+            return res.status(400).send("Invalid ID.");
+        }
     }
     const types = Object.values(TextNodeType);
     try{
@@ -50,7 +54,7 @@ export const addNode = async (req, res) => {
         console.log(authors);
         console.log(opera);
         res.render("nodes/add", {
-            work: currentWork,
+            work: current,
             types: types,
             authors: authors,
             opera: opera

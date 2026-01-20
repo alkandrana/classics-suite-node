@@ -13,13 +13,20 @@ import {
 
 const authorRouter = Router();
 
-authorRouter.get("/", getAllAuthors);
-authorRouter.get("/:id", getAuthor);
 authorRouter.get("/add", addAuthor);
-authorRouter.get("/edit/:id", editAuthor);
-authorRouter.get("/delete/:id", confirmDelete);
 authorRouter.post("/add", createAuthor);
+
+authorRouter.get("/", getAllAuthors);
+authorRouter.get("/edit/:id", editAuthor);
 authorRouter.post("/edit/:id", updateAuthor);
+authorRouter.get("/delete/:id", confirmDelete);
 authorRouter.post("/delete/:id", deleteAuthor);
+authorRouter.get("/:id", getAuthor);
+
+
+
+
+
+
 
 export default authorRouter;

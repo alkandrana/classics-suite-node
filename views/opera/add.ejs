@@ -1,48 +1,59 @@
-<% title=locals.title %>
+<% title = locals.title %>
 
-  <form method="post" action="/opera/add">
+<form method="post" action="/opera/add">
     <div class="row p-5">
-      <div class="col-2">
-        <label for="id" class="col-form-label">Abbreviation</label>
-      </div>
-      <div class="col-4">
-        <input type="text" name="opusId" id="id" class="form-control" />
-      </div>
+        <div class="col-2">
+            <label for="id" class="col-form-label">Abbreviation</label>
+        </div>
+        <div class="col-4">
+            <input type="text" name="opusId" id="id" class="form-control"/>
+        </div>
     </div>
 
     <div class="row p-5">
-      <div class="col-2">
-        <label for="title" class="col-form-label">Work Title</label>
-      </div>
-      <div class="col-6">
-        <input type="text" name="title" id="title" class="form-control">
-      </div>
+        <div class="col-2">
+            <label for="title" class="col-form-label">Work Title</label>
+        </div>
+        <div class="col-6">
+            <input type="text" name="title" id="title" class="form-control">
+        </div>
     </div>
     <div class="row p-5">
-      <div class="col-2">
-        <label class="col-form-label" for="lang">Language</label>
-      </div>
-      <div class="col-6">
-        <select name="language" id="lang" class="form-select">
-          <option value="">select a language</option>
-          <% for (let l of lang) {%>
-            <option value="<%= l %>">
-              <%= l %>
-            </option>
-            <% } %>
-        </select>
-      </div>
+        <div class="col-2">
+            <label class="col-form-label" for="lang">Language</label>
+        </div>
+        <div class="col-6">
+            <select name="dialect" id="lang" class="form-select">
+                <option value="">select a language</option>
+                <% for (let l of languages) { %>
+                    <% if (l === author.lang) { %>
+                        <option value="<%= l %>" selected><%= l %></option>
+                    <% } else { %>
+                        <option value="<%= l %>"><%= l %></option>
+                    <% } %>
+                <% } %>
+            </select>
+        </div>
     </div>
     <div class="row p-5">
-      <div class="col-2">
-        <label for="authorId" class="col-form-label">Author Abbreviation</label>
-      </div>
-      <div class="col-4">
-        <input type="text" name="authorId" id="authorId" value="<%= author %>" class="form-control">
-      </div>
+        <div class="col-2">
+            <label for="authorId" class="col-form-label">Author</label>
+        </div>
+        <div class="col-6">
+            <select name="authorId" id="authorId" class="form-select">
+                <option value="">select an author</option>
+                <% for (let a of authors) { %>
+                    <% if (a.authorId === author.id) { %>
+                        <option value="<%= a.authorId %>" selected><%= a.name %></option>
+                    <% } else { %>
+                        <option value="<%= a.authorId %>"><%= a.name %></option>
+                    <% } %>
+                <% } %>
+            </select>
+        </div>
     </div>
     <div class="row p-5">
-      <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
-      <a href="/opera/" class="col-2 btn btn-warning">Cancel</a>
+        <button type="submit" class="col-2 btn btn-success me-3">Save Changes</button>
+        <a href="/opera/" class="col-2 btn btn-warning">Cancel</a>
     </div>
-  </form>
+</form>

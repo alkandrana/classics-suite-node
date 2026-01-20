@@ -54,29 +54,50 @@ export const getOpus = async (req, res) => {
 
 // get add form
 export const addOpus = async (req, res) => {
-  const title = "Add a New Work";
-  const languages = Object.values(Language);
-  let authorId = "";
-  if (req.params.authorId){
-    authorId = req.params.authorId.trim().toUpperCase();
-  }
-  res.render("opera/add", {title: title, lang: languages, author: authorId } );
+    const title = "Add a New Work";
+    const languages = Object.values(Language);
+    const author = {
+        id: "",
+        lang: ""
+    };
+    try {
+        const authors = await prisma.author.findMany({});
+
+        if (req.params.authorId) {
+            author.id = req.params.authorId.trim().toUpperCase();
+            const currentAuthor = await prisma.author.findUnique({
+                where: {
+                    authorId: author.id,
+                },
+                select: {
+                    language: true,
+                },
+            });
+            author.lang = currentAuthor.language;
+        }
+        console.log(author);
+        console.log(authors);
+        console.log(languages);
+        res.render("opera/add", {title: title, languages: languages, authors: authors, author: author});
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 // post new work
 export const createOpus = async (req, res) => {
-  req.body.opusId = req.body.opusId.trim().toUpperCase();
-  req.body.authorId = req.body.authorId.trim().toUpperCase();
-  const opusData = req.body;
-  try {
-    const newOpus = await opusClient.create({
-      data: opusData,
-    });
-    console.log(`${newOpus.authorId}. ${newOpus.opusId}. successfully created.`);
-  } catch (e) {
-    console.log(e);
-  }
-  res.redirect("/opera");
+    req.body.opusId = req.body.opusId.trim().toUpperCase();
+    req.body.authorId = req.body.authorId.trim().toUpperCase();
+    const opusData = req.body;
+    try {
+        const newOpus = await opusClient.create({
+            data: opusData,
+        });
+        console.log(`${newOpus.authorId}. ${newOpus.opusId}. successfully created.`);
+    } catch (e) {
+        console.log(e);
+    }
+    res.redirect("/opera");
 }
 
 // --- UPDATE ---
@@ -107,25 +128,25 @@ export const editOpus = async (req, res) => {
 
 // post edited work
 export const updateOpus = async (req, res) => {
-  const authorId = req.params.authorId.trim().toUpperCase();
-  const opusId = req.params.opusId.trim().toUpperCase();
-  const opusData = req.body;
-  try {
-    const editedOpus = await opusClient.update({
-      where: {
-        authorId_opusId: {
-          authorId: authorId,
-          opusId: opusId,
-        },
-      },
-      data: opusData,
-    });
-    console.log(`${authorId}. ${opusId}. successfully updated.`);
-    console.log(editedOpus);
-  } catch (e) {
-    console.log(e);
-  }
-  res.redirect("/opera");
+    const authorId = req.params.authorId.trim().toUpperCase();
+    const opusId = req.params.opusId.trim().toUpperCase();
+    const opusData = req.body;
+    try {
+        const editedOpus = await opusClient.update({
+            where: {
+                authorId_opusId: {
+                    authorId: authorId,
+                    opusId: opusId,
+                },
+            },
+            data: opusData,
+        });
+        console.log(`${authorId}. ${opusId}. successfully updated.`);
+        console.log(editedOpus);
+    } catch (e) {
+        console.log(e);
+    }
+    res.redirect("/opera");
 }
 
 // --- DELETE ---
