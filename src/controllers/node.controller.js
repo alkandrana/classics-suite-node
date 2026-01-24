@@ -8,6 +8,7 @@ const nodeClient = prisma.textNode;
 
 // get nodes by opus
 export const getNode = async (req, res) => {
+    console.log("Getting node...")
     const nodeId = parseInt(req.params.id);
     if (isNaN(nodeId)) {
         return res.status(400).send("Invalid ID.");
@@ -20,13 +21,31 @@ export const getNode = async (req, res) => {
             include: {
                 children: true,
                 opus: {
-                    include: {
-                        author: true,
+                    select: {
+                        title: true,
+                        author: {
+                            select: {
+                                name: true,
+                            },
+                        },
                     },
                 },
+                parent: true,
             },
         });
-        res.render('nodes/details', { section: node });
+        const childTypes = new Set(node.children.map(c => c.type));
+        let type;
+        if (childTypes.size === 0) {
+            type = 'empty';
+        } else if (childTypes.size === 1) {
+            type = [...childTypes][0];
+        } else {
+            type = 'mixed';
+        }
+        console.log(`Type of children: ${type}`);
+        console.log(childTypes);
+        console.log(node);
+        res.render('nodes/details', { section: node, nodeType: type });
     } catch (e) {
         console.log(e);
     }
@@ -47,7 +66,7 @@ export const addNode = async (req, res) => {
             return res.status(400).send("Invalid ID.");
         }
     }
-    const types = Object.values(TextNodeType);
+    const types = Object.values(TextNodeType).map(String); // makes type explicit and suppresses Jetbrains IDE warnings related to type comparison
     try{
         const authors = await prisma.author.findMany({});
         const opera = await prisma.opus.findMany({});
@@ -70,7 +89,7 @@ export const createNode = async (req, res) => {
     console.log(req.body);
     const ordinal = parseInt(req.body.ordinal);
     const text = req.body.text;
-    if (req.body.type === "LINE" && !text) {
+    if (req.body.type === "Line" && !text) {
         return res.status(400).send("Line requires text field.");
     }
     const authorId = req.body.authorId.trim().toUpperCase();
@@ -109,7 +128,7 @@ export const createNode = async (req, res) => {
         });
         console.log(newNode);
         console.log(`${newNode.authorId} ${newNode.opusId} ${newNode.type} ${newNode.label} successfully created`);
-        res.redirect(`/opera/${newNode.authorId}/${newNode.opusId}/`)
+        res.redirect(`/nodes/${newNode.parentId}/`);
     } catch (e) {
         console.log(e);
     }
@@ -117,3 +136,24 @@ export const createNode = async (req, res) => {
 // ---- UPDATE ----
 
 // ---- DELETE ----
+export const deleteNode = async (req, res) => {
+    const nodeId = parseInt(req.params.nodeId);
+    console.log(req.params);
+    console.log(nodeId);
+    if (!nodeId) {
+        return res.status(400).send("Invalid ID.");
+    }
+    try {
+        const deleted = await nodeClient.delete({
+            where: {
+                id: nodeId,
+            },
+        });
+        console.log(deleted);
+        console.log(`${deleted.opusId} ${deleted.parentId} ${deleted.type} ${deleted.label} successfully deleted.`);
+        res.redirect(`/nodes/${deleted.authorId}/${deleted.opusId}/${deleted.parentId}/`);
+    } catch (e) {
+        console.log(e);
+    }
+
+}

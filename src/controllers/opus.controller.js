@@ -1,5 +1,5 @@
-import { prisma } from '../../lib/prisma.js';
-import { Language } from '../../generated/prisma/enums.ts';
+import {prisma} from '../../lib/prisma.js';
+import {Language} from '../../generated/prisma/enums.ts';
 
 const opusClient = prisma.opus;
 
@@ -7,47 +7,48 @@ const opusClient = prisma.opus;
 
 // get all works
 export const getAllOpera = async (req, res) => {
-  try {
-    const allOpera = await opusClient.findMany({
-      include: {
-        author: true,
-      },
-    });
-    res.render("opera/index", { opera: allOpera });
-  } catch (e){
-    console.log(e);
-  }
+    try {
+        const allOpera = await opusClient.findMany({
+            include: {
+                author: true,
+            },
+        });
+        res.render("opera/index", {opera: allOpera});
+    } catch (e) {
+        console.log(e);
+    }
 };
 
 // get one work
 export const getOpus = async (req, res) => {
-  const authorId = req.params.authorId.trim().toUpperCase();
-  const opusId = req.params.opusId.trim().toUpperCase();
-  try {
-    const opus = await opusClient.findUnique({
-      where: {
-        authorId_opusId: {
-          authorId: authorId,
-          opusId: opusId,
-        },
-      },
-      include: {
-        textNodes: {
-          include: {
-            children: true,
-          },
-        },
-        author: true,
-      },
-    });
-    // FOR TESTING ONLY
-    console.log(opus);
-    console.log("Children:")
-    console.log(opus.textNodes[1].children);
-    res.render("opera/details", { opus: opus });
-  } catch (e) {
-    console.log(e);
-  }
+    const authorId = req.params.authorId.trim().toUpperCase();
+    const opusId = req.params.opusId.trim().toUpperCase();
+    try {
+        const opus = await opusClient.findUnique({
+            where: {
+                authorId_opusId: {
+                    authorId: authorId,
+                    opusId: opusId,
+                },
+            },
+            include: {
+                textNodes: {
+                    where: {
+                        parentId: null,
+                    },
+                    include: {
+                        children: true,
+                    },
+                },
+                author: true,
+            },
+        });
+        // FOR TESTING ONLY
+        console.log(opus);
+        res.render("opera/details", {opus: opus});
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 // --- CREATE ---
@@ -104,26 +105,26 @@ export const createOpus = async (req, res) => {
 
 // get edit form
 export const editOpus = async (req, res) => {
-  const title = "Edit Work";
-  console.log(req.params);
-  const  authorId = req.params.authorId;
-  const opusId = req.params.opusId;
-  // const { authId, opusId } = req.params;
-  console.log(`Author: ${authorId}, OpusId: ${opusId}`);
-  const languages = Object.values(Language);
-  try {
-    const opus = await opusClient.findUnique({
-      where: {
-        authorId_opusId: {
-          authorId: authorId,
-          opusId: opusId,
-        },
-      },
-    });
-    res.render("opera/edit", { title: title, langs: languages, opus: opus });
-  } catch (e){
-    console.log(e);
-  }
+    const title = "Edit Work";
+    console.log(req.params);
+    const authorId = req.params.authorId;
+    const opusId = req.params.opusId;
+    // const { authId, opusId } = req.params;
+    console.log(`Author: ${authorId}, OpusId: ${opusId}`);
+    const languages = Object.values(Language);
+    try {
+        const opus = await opusClient.findUnique({
+            where: {
+                authorId_opusId: {
+                    authorId: authorId,
+                    opusId: opusId,
+                },
+            },
+        });
+        res.render("opera/edit", {title: title, langs: languages, opus: opus});
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 // post edited work
@@ -153,41 +154,41 @@ export const updateOpus = async (req, res) => {
 
 // get "confirm delete" page
 export const confirmDelete = async (req, res) => {
-  const authId = req.params.authorId.trim().toUpperCase();
-  const opusId = req.params.opusId.trim().toUpperCase();
-  const title = `Delete ${authId} ${opusId}`;
-  const opus = await opusClient.findUnique({
-    where: {
-      authorId_opusId: {
-        authorId: authId,
-        opusId: opusId,
-      },
-    },
-    include: {
-      author: true,
-    },
-  });
-  res.render("opera/delete", { title: title, opus: opus });
+    const authId = req.params.authorId.trim().toUpperCase();
+    const opusId = req.params.opusId.trim().toUpperCase();
+    const title = `Delete ${authId} ${opusId}`;
+    const opus = await opusClient.findUnique({
+        where: {
+            authorId_opusId: {
+                authorId: authId,
+                opusId: opusId,
+            },
+        },
+        include: {
+            author: true,
+        },
+    });
+    res.render("opera/delete", {title: title, opus: opus});
 }
 
 // post delete request
 export const deleteOpus = async (req, res) => {
-  console.log("Deleting...");
-  const authId = req.params.authorId.trim().toUpperCase();
-  const opusId = req.params.opusId.trim().toUpperCase();
-  try {
-    const opus = await opusClient.delete({
-      where: {
-        authorId_opusId: {
-          authorId: authId,
-          opusId: opusId,
-        },
-      },
-    });
-    console.log(`${authId} ${opusId} successfully deleted.`);
-    console.log(opus);
-  } catch (e) {
-    console.log(e);
-  }
-  res.redirect("/opera");
+    console.log("Deleting...");
+    const authId = req.params.authorId.trim().toUpperCase();
+    const opusId = req.params.opusId.trim().toUpperCase();
+    try {
+        const opus = await opusClient.delete({
+            where: {
+                authorId_opusId: {
+                    authorId: authId,
+                    opusId: opusId,
+                },
+            },
+        });
+        console.log(`${authId} ${opusId} successfully deleted.`);
+        console.log(opus);
+    } catch (e) {
+        console.log(e);
+    }
+    res.redirect("/opera");
 }

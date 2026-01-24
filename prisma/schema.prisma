@@ -21,6 +21,7 @@ enum Language {
 
 enum TextNodeType {
   Book
+  Chapter
   Section
   Line
 }
