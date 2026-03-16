@@ -16,7 +16,10 @@ export const getAllAuthors = async (req, res) => {
 };
 
 export const getAuthor = async (req, res) => {
-    const authorId = req.params.id.trim().toUpperCase();
+    const authorId = parseInt(req.params.id);
+    if (isNaN(authorId)) {
+        return res.status(403).send('Invalid author id');
+    }
     try {
         const author = await authorClient.findUnique({
             where: {
@@ -46,7 +49,8 @@ export const addAuthor = async (req, res) => {
 
 // post new author
 export const createAuthor = async (req, res) => {
-    req.body.authorId = req.body.authorId.trim().toUpperCase();
+    console.log(req.body);
+    req.body.authorCode = req.body.authorCode.trim().toUpperCase();
     try {
         const authorData = req.body;
         const newAuthor = await authorClient.create({
@@ -64,7 +68,10 @@ export const createAuthor = async (req, res) => {
 // get edit-author form
 export const editAuthor = async (req, res) => {
     const title = "Edit Author"
-    const authorId = req.params.id; // irrespective of database property name
+    const authorId = parseInt(req.params.id); // irrespective of database property name
+    if (isNaN(authorId)) {
+        return res.status(403).send('Invalid author id');
+    }
     const languages = Object.values(Language);
     console.log(authorId);
     try {
@@ -82,7 +89,10 @@ export const editAuthor = async (req, res) => {
 
 // update author (post)
 export const updateAuthor = async (req, res) => {
-    const authorId = req.params.id.trim().toUpperCase();
+    const authorId = parseInt(req.params.id);
+    if (isNaN(authorId)) {
+        return res.status(403).send('Invalid author id');
+    }
     try {
         const authorData = req.body;
         const editedAuthor = await authorClient.update({
@@ -91,18 +101,21 @@ export const updateAuthor = async (req, res) => {
             },
             data: authorData,
         });
-        console.log(`${editedAuthor.authorId} successfully updated.`)
+        console.log(`${editedAuthor.authorCode} successfully updated.`)
     } catch (e) {
         console.log(e);
     }
-    res.redirect("/authors/");
+    res.redirect(`/authors/${authorId}`);
 }
 
 // ---- DELETE ----
 
 // get "Confirm Delete" page
 export const confirmDelete = async (req, res) => {
-    const authorId = req.params.id.trim().toUpperCase();
+    const authorId = parseInt(req.params.id);
+    if (isNaN(authorId)) {
+        return res.status(403).send('Invalid author id');
+    }
     try {
         const record = await authorClient.findUnique({
             where: {
@@ -125,7 +138,10 @@ export const confirmDelete = async (req, res) => {
 
 // post delete request
 export const deleteAuthor = async (req, res) => {
-    const authorId = req.params.id.trim().toUpperCase();
+    const authorId = parseInt(req.params.id);
+    if (isNaN(authorId)) {
+        return res.status(403).send('Invalid author id');
+    }
     try {
         const object = await authorClient.delete({
             where: {

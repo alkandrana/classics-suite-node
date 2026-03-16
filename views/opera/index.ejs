@@ -16,7 +16,7 @@
       <% for (let o of opera){ %>
         <tr>
           <td>
-            <%= o.opusId %>
+            <%= o.opusCode %>
           </td>
           <td>
             <%= o.title %>
@@ -25,7 +25,7 @@
             <%= o.author.name %>
           </td>
           <td>
-            <a href="/opera/<%= o.authorId %>/<%= o.opusId %>" class="btn btn-sm btn-success">View Details</a>
+            <a href="/opera/<%= o.opusId %>" class="btn btn-sm btn-success">View Details</a>
           </td>
         </tr>
         <% } %>

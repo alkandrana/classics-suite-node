@@ -27,7 +27,8 @@ enum TextNodeType {
 }
 
 model Author {
-  authorId String @id @db.Citext
+  authorId Int @id @default(autoincrement())
+  authorCode String @unique @db.Citext
   name     String @db.VarChar(255)
 
   praenomen String? @db.VarChar(255)
@@ -41,16 +42,17 @@ model Author {
 }
 
 model Opus {
-  opusId   String   @db.Citext
+  opusId  Int    @id @default(autoincrement())
+  opusCode   String   @db.Citext
   title    String   @db.VarChar(255)
   dialect Language
 
-  authorId String @db.Citext
+  authorId Int
   author   Author @relation(fields: [authorId], references: [authorId])
 
   textNodes TextNode[]
 
-  @@id([authorId, opusId])
+  @@unique([authorId, opusCode])
 }
 
 model TextNode {
@@ -67,9 +69,9 @@ model TextNode {
   text String? @db.Text
 
   /// Belongs to an Opus (composite key)
-  authorId String @db.Citext
-  opusId   String @db.Citext
-  opus     Opus   @relation(fields: [authorId, opusId], references: [authorId, opusId])
+  authorId Int
+  opusId   Int
+  opus     Opus   @relation(fields: [opusId], references: [opusId])
 
   /// Tree structure
   parentId Int?

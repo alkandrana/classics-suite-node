@@ -2,6 +2,7 @@ import {prisma} from '../../lib/prisma.js';
 import {Language} from '../../generated/prisma/enums.ts';
 
 const opusClient = prisma.opus;
+const authorClient = prisma.author;
 
 // ---- READ ----
 
@@ -21,16 +22,15 @@ export const getAllOpera = async (req, res) => {
 
 // get one work
 export const getOpus = async (req, res) => {
-    const authorId = req.params.authorId.trim().toUpperCase();
-    const opusId = req.params.opusId.trim().toUpperCase();
+    const opusId = parseInt(req.params.opusId);
+    if (isNaN(opusId)) {
+        return res.status(404).send("Opus not found");
+    }
     try {
         const opus = await opusClient.findUnique({
             where: {
-                authorId_opusId: {
-                    authorId: authorId,
-                    opusId: opusId,
+                opusId: opusId,
                 },
-            },
             include: {
                 textNodes: {
                     where: {
@@ -65,7 +65,7 @@ export const addOpus = async (req, res) => {
         const authors = await prisma.author.findMany({});
 
         if (req.params.authorId) {
-            author.id = req.params.authorId.trim().toUpperCase();
+            author.id = parseInt(req.params.authorId);
             const currentAuthor = await prisma.author.findUnique({
                 where: {
                     authorId: author.id,
@@ -87,18 +87,23 @@ export const addOpus = async (req, res) => {
 
 // post new work
 export const createOpus = async (req, res) => {
-    req.body.opusId = req.body.opusId.trim().toUpperCase();
-    req.body.authorId = req.body.authorId.trim().toUpperCase();
+    console.log(req.body);
+    req.body.opusCode = req.body.opusCode.trim().toUpperCase();
+    req.body.authorId = parseInt(req.body.authorId);
+    if (isNaN(req.body.authorId)) {
+        return res.status(400).send("Invalid author id");
+    }
     const opusData = req.body;
     try {
         const newOpus = await opusClient.create({
             data: opusData,
         });
-        console.log(`${newOpus.authorId}. ${newOpus.opusId}. successfully created.`);
+        console.log(`${newOpus.opusCode} successfully created.`);
+        res.redirect(`/authors/${newOpus.authorId}`);
     } catch (e) {
         console.log(e);
     }
-    res.redirect("/opera");
+
 }
 
 // --- UPDATE ---
@@ -107,21 +112,16 @@ export const createOpus = async (req, res) => {
 export const editOpus = async (req, res) => {
     const title = "Edit Work";
     console.log(req.params);
-    const authorId = req.params.authorId;
-    const opusId = req.params.opusId;
-    // const { authId, opusId } = req.params;
-    console.log(`Author: ${authorId}, OpusId: ${opusId}`);
+    const opusId = parseInt(req.params.opusId);
     const languages = Object.values(Language);
     try {
+        const authors = await authorClient.findMany({});
         const opus = await opusClient.findUnique({
             where: {
-                authorId_opusId: {
-                    authorId: authorId,
-                    opusId: opusId,
-                },
+                opusId: opusId,
             },
         });
-        res.render("opera/edit", {title: title, langs: languages, opus: opus});
+        res.render("opera/edit", {title: title, langs: languages, opus: opus, authors: authors});
     } catch (e) {
         console.log(e);
     }
@@ -129,20 +129,24 @@ export const editOpus = async (req, res) => {
 
 // post edited work
 export const updateOpus = async (req, res) => {
-    const authorId = req.params.authorId.trim().toUpperCase();
-    const opusId = req.params.opusId.trim().toUpperCase();
+    const opusId = parseInt(req.params.opusId);
+    if (isNaN(opusId)) {
+        return res.status(400).send("Invalid opus id");
+    }
+    const authorId = parseInt(req.body.authorId);
+    if (isNaN(authorId)) {
+        return res.status(400).send("Invalid author id");
+    }
+    req.body.authorId = authorId;
     const opusData = req.body;
     try {
         const editedOpus = await opusClient.update({
             where: {
-                authorId_opusId: {
-                    authorId: authorId,
-                    opusId: opusId,
-                },
+                opusId: opusId,
             },
             data: opusData,
         });
-        console.log(`${authorId}. ${opusId}. successfully updated.`);
+        console.log(`${editedOpus.opusCode} successfully updated.`);
         console.log(editedOpus);
     } catch (e) {
         console.log(e);
@@ -154,38 +158,36 @@ export const updateOpus = async (req, res) => {
 
 // get "confirm delete" page
 export const confirmDelete = async (req, res) => {
-    const authId = req.params.authorId.trim().toUpperCase();
-    const opusId = req.params.opusId.trim().toUpperCase();
-    const title = `Delete ${authId} ${opusId}`;
+    const opusId = parseInt(req.params.opusId);
+    if (isNaN(opusId)) {
+        return res.status(400).send("Invalid opus id");
+    }
+    // const title = `Delete ${authId} ${opusId}`;
     const opus = await opusClient.findUnique({
         where: {
-            authorId_opusId: {
-                authorId: authId,
-                opusId: opusId,
-            },
+            opusId: opusId,
         },
         include: {
             author: true,
         },
     });
-    res.render("opera/delete", {title: title, opus: opus});
+    res.render("opera/delete", {opus: opus});
 }
 
 // post delete request
 export const deleteOpus = async (req, res) => {
     console.log("Deleting...");
-    const authId = req.params.authorId.trim().toUpperCase();
-    const opusId = req.params.opusId.trim().toUpperCase();
+    const opusId = parseInt(req.params.opusId);
+    if (isNaN(opusId)) {
+        return res.status(400).send("Invalid opus id");
+    }
     try {
         const opus = await opusClient.delete({
             where: {
-                authorId_opusId: {
-                    authorId: authId,
-                    opusId: opusId,
-                },
+                opusId: opusId,
             },
         });
-        console.log(`${authId} ${opusId} successfully deleted.`);
+        console.log(`${opus.opusCode} successfully deleted.`);
         console.log(opus);
     } catch (e) {
         console.log(e);

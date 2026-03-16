@@ -1,10 +1,22 @@
 <%= title = locals.title %>
-<% let label = `${section.type} ${section.label}`;
-if (section.parent){
-    label = `${section.parent.type} ${section.parent.label} ${label}`;
-}%>
-<h1><%= `${section.opus.author.name} ${section.opus.title} ${label}`%></h1>
-
+<h1>Details</h1>
+<div class="card col-4 bg-dark text-light m-1">
+    <div class="card-body">
+        <h5 class="card-title"><%= `${section.opus.author.name} ${section.opus.title} ${label}`%></h5>
+        <ul class="list-group list-group-flush bg-dark">
+            <li class="list-group-item bg-secondary text-light">Section: <%= section.label %></li>
+            <li class="list-group-item bg-secondary text-light">Type: <%= section.type %></li>
+            <li class="list-group-item bg-secondary text-light">Author: <%= section.opus.author.name %></li>
+            <li class="list-group-item bg-secondary text-light">Work: <%= section.opus.title %></li>
+            <li class="list-group-item bg-secondary text-light">Container: <%= parentType %></li>
+        </ul>
+        <div class="row">
+            <a href="/<%= root %>/<%= parent %>" class="col">Back to <%= parentType %></a>
+            <a href="/nodes/<%= section.id %>/edit" class="link-warning col">Edit <%= section.type %></a>
+            <a href="/nodes/<%= section.id %>/delete" class="link-danger col">Delete <%= section.type %></a>
+        </div>
+    </div>
+</div>
 <% if (nodeType === 'empty') {%>
     <a href="/nodes/<%= section.authorId %>/<%= section.opusId %>/<%= section.id %>/add" class="btn btn-lg btn-primary offset-5">Add New Section/Line</a>
 <% } else { %>

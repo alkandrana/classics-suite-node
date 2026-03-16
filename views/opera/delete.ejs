@@ -1,4 +1,4 @@
-<% title=locals.title %>
+<% title=`Delete ${opus.author.authorCode} ${opus.opusCode}` %>
   <h1>Confirm Delete Work</h1>
   <h2>Are you sure you want to delete <%= opus.title %>?</h2>
   <ul>
@@ -12,7 +12,7 @@
       Author: <%= opus.author.name %>
     </li>
   </ul>
-  <form method="post" action="/opera/<%= opus.authorId %>/<%= opus.opusId %>/delete/">
+  <form method="post" action="/opera/<%= opus.opusId %>/delete/">
     <button type="submit">Delete</button>
   </form>
   <a href="/opera/">Cancel</a>

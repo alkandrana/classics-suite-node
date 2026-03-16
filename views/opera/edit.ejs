@@ -1,12 +1,12 @@
 <% title=locals.title %>
 
-  <form method="post" action="/opera/<%= opus.authorId %>/<%= opus.opusId %>/edit">
+  <form method="post" action="/opera/<%= opus.opusId %>/edit">
     <div class="row p-5">
       <div class="col-2">
         <label for="id" class="col-form-label">Abbreviation</label>
       </div>
       <div class="col-4">
-        <input type="text" name="opusId" id="id" value="<%= opus.opusId %>" class="form-control" />
+        <input type="text" name="opusCode" id="id" value="<%= opus.opusCode %>" class="form-control" />
       </div>
     </div>
 
@@ -41,10 +41,15 @@
     </div>
     <div class="row p-5">
       <div class="col-2">
-        <label for="authorId" class="col-form-label">Author Abbreviation</label>
+        <label for="authorId" class="col-form-label">Author</label>
       </div>
       <div class="col-4">
-        <input type="text" name="authorId" id="authorId" value="<%= opus.authorId %>" class="form-control">
+          <select name="authorId" id="authorId" class="form-select">
+              <option value="">select an author</option>
+              <% for (let a of authors) { %>
+                <option value="<%= a.authorId %>" selected="<% a.authorId === opus.authorId %>"><%= a.name %></option>
+              <% } %>
+          </select>
       </div>
     </div>
     <div class="row p-5">

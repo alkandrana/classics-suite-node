@@ -21,8 +21,8 @@
 
 <div>
     <a href="/opera/">Back to List</a> |
-    <a href="/opera/<%= opus.authorId %>/<%= opus.opusId %>/edit" class="link-warning">Edit</a> |
-    <a href="/opera/<%= opus.authorId %>/<%= opus.opusId %>/delete" class="link-danger">Delete</a> |
+    <a href="/opera/<%= opus.opusId %>/edit" class="link-warning">Edit</a> |
+    <a href="/opera/<%= opus.opusId %>/delete" class="link-danger">Delete</a> |
 </div>
 <hr/>
 <% if (opus.textNodes.length > 0) { %>
@@ -64,7 +64,7 @@
                     <form method="post" action="/nodes/add" class="row d-none" id="lineForm">
                         <input type="hidden" name="authorId" value="<%= opus.authorId %>" />
                         <input type="hidden" name="opusId" value="<%= opus.opusId %>" />
-                        <input type="hidden" name="type" id="type" value="LINE" />
+                        <input type="hidden" name="type" id="type" value="Line" />
                         <input type="number" name="ordinal" id="num" class="col-1 bg-dark text-light border-0">
                         <input type="text" name="text" id="text" class="col bg-dark text-light border-0">
                         <button type="submit" class="btn btn-sm btn-secondary col-2 ms-1">Add</button>

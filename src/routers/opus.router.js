@@ -15,11 +15,11 @@ const opusRouter = Router();
 
 opusRouter.get("/", getAllOpera);
 opusRouter.get("/add{/:authorId}", addOpus);
-opusRouter.get("/:authorId/:opusId/", getOpus);
-opusRouter.get("/:authorId/:opusId/edit/", editOpus);
+opusRouter.get("/:opusId/", getOpus);
+opusRouter.get("/:opusId/edit/", editOpus);
 opusRouter.post("/add/", createOpus);
-opusRouter.post("/:authorId/:opusId/delete/", deleteOpus);
-opusRouter.get("/:authorId/:opusId/delete/", confirmDelete);
-opusRouter.post("/:authorId/:opusId/edit", updateOpus);
+opusRouter.post("/:opusId/delete/", deleteOpus);
+opusRouter.get("/:opusId/delete/", confirmDelete);
+opusRouter.post("/:opusId/edit", updateOpus);
 
 export default opusRouter;

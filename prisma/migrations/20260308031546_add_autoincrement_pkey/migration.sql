@@ -1,17 +1,35 @@
+-- Add CITEXT
+CREATE EXTENSION IF NOT EXISTS citext;
 -- CreateEnum
-CREATE TYPE "Language" AS ENUM ('LATIN', 'GREEK', 'HEBREW');
+CREATE TYPE "Language" AS ENUM ('Latin', 'Greek', 'Hebrew');
 
 -- CreateEnum
-CREATE TYPE "TextNodeType" AS ENUM ('BOOK', 'SECTION', 'LINE');
+CREATE TYPE "TextNodeType" AS ENUM ('Book', 'Chapter', 'Section', 'Line');
+
+-- CreateTable
+CREATE TABLE "Author" (
+    "authorId" SERIAL NOT NULL,
+    "authorCode" CITEXT NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "praenomen" VARCHAR(255),
+    "nomen" VARCHAR(255),
+    "cognomen" VARCHAR(255),
+    "language" "Language" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Author_pkey" PRIMARY KEY ("authorId")
+);
 
 -- CreateTable
 CREATE TABLE "Opus" (
-    "opusId" CITEXT NOT NULL,
+    "opusId" SERIAL NOT NULL,
+    "opusCode" CITEXT NOT NULL,
     "title" VARCHAR(255) NOT NULL,
-    "language" "Language" NOT NULL,
-    "authorId" CITEXT NOT NULL,
+    "dialect" "Language" NOT NULL,
+    "authorId" INTEGER NOT NULL,
 
-    CONSTRAINT "Opus_pkey" PRIMARY KEY ("authorId","opusId")
+    CONSTRAINT "Opus_pkey" PRIMARY KEY ("opusId")
 );
 
 -- CreateTable
@@ -21,8 +39,8 @@ CREATE TABLE "TextNode" (
     "label" VARCHAR(255),
     "ordinal" INTEGER NOT NULL,
     "text" TEXT,
-    "authorId" CITEXT NOT NULL,
-    "opusId" CITEXT NOT NULL,
+    "authorId" INTEGER NOT NULL,
+    "opusId" INTEGER NOT NULL,
     "parentId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -71,6 +89,12 @@ CREATE TABLE "VocabOccurrence" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Author_authorCode_key" ON "Author"("authorCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Opus_authorId_opusCode_key" ON "Opus"("authorId", "opusCode");
+
+-- CreateIndex
 CREATE INDEX "TextNode_authorId_opusId_parentId_ordinal_idx" ON "TextNode"("authorId", "opusId", "parentId", "ordinal");
 
 -- CreateIndex
@@ -89,7 +113,7 @@ CREATE INDEX "VocabOccurrence_nodeId_idx" ON "VocabOccurrence"("nodeId");
 ALTER TABLE "Opus" ADD CONSTRAINT "Opus_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "Author"("authorId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TextNode" ADD CONSTRAINT "TextNode_authorId_opusId_fkey" FOREIGN KEY ("authorId", "opusId") REFERENCES "Opus"("authorId", "opusId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TextNode" ADD CONSTRAINT "TextNode_opusId_fkey" FOREIGN KEY ("opusId") REFERENCES "Opus"("opusId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TextNode" ADD CONSTRAINT "TextNode_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "TextNode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
